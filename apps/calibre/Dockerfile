@@ -35,11 +35,14 @@ RUN \
     apk add --no-cache --virtual=.build-deps \
         build-base \
         curl \
+        gcc \
         libffi-dev \
         libxml2-dev \
         libxslt-dev \
         linux-headers \
         openldap-dev \
+        xdg-utils \
+        xz-utils \
     && \
     case "${TARGETPLATFORM}" in \
         'linux/amd64') export ARCH='x64' ;; \

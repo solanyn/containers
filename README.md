@@ -109,8 +109,10 @@ Container | Channel | Image
 --- | --- | ---
 [actions-runner](https://github.com/solanyn/containers/pkgs/container/actions-runner) | stable | ghcr.io/solanyn/actions-runner
 [bazarr](https://github.com/solanyn/containers/pkgs/container/bazarr) | stable | ghcr.io/solanyn/bazarr
+[calibre](https://github.com/solanyn/containers/pkgs/container/calibre) | stable | ghcr.io/solanyn/calibre
+[calibre-web](https://github.com/solanyn/containers/pkgs/container/calibre-web) | stable | ghcr.io/solanyn/calibre-web
 [home-assistant](https://github.com/solanyn/containers/pkgs/container/home-assistant) | stable | ghcr.io/solanyn/home-assistant
-[jbops](https://github.com/solanyn/containers/pkgs/container/jbops) | stable | ghcr.io/solanyn/jbops
+[kepubify](https://github.com/solanyn/containers/pkgs/container/kepubify) | stable | ghcr.io/solanyn/kepubify
 [plex](https://github.com/solanyn/containers/pkgs/container/plex) | stable | ghcr.io/solanyn/plex
 [postgres-init](https://github.com/solanyn/containers/pkgs/container/postgres-init) | stable | ghcr.io/solanyn/postgres-init
 [prowlarr](https://github.com/solanyn/containers/pkgs/container/prowlarr) | master | ghcr.io/solanyn/prowlarr
@@ -120,7 +122,8 @@ Container | Channel | Image
 [radarr](https://github.com/solanyn/containers/pkgs/container/radarr) | master | ghcr.io/solanyn/radarr
 [radarr-develop](https://github.com/solanyn/containers/pkgs/container/radarr-develop) | develop | ghcr.io/solanyn/radarr-develop
 [radarr-nightly](https://github.com/solanyn/containers/pkgs/container/radarr-nightly) | nightly | ghcr.io/solanyn/radarr-nightly
-[sabnzbd](https://github.com/solanyn/containers/pkgs/container/sabnzbd) | stable | ghcr.io/solanyn/sabnzbd
+[readarr-develop](https://github.com/solanyn/containers/pkgs/container/readarr-develop) | develop | ghcr.io/solanyn/readarr-develop
+[readarr-nightly](https://github.com/solanyn/containers/pkgs/container/readarr-nightly) | nightly | ghcr.io/solanyn/readarr-nightly
 [sonarr](https://github.com/solanyn/containers/pkgs/container/sonarr) | main | ghcr.io/solanyn/sonarr
 [sonarr-develop](https://github.com/solanyn/containers/pkgs/container/sonarr-develop) | develop | ghcr.io/solanyn/sonarr-develop
 [tautulli](https://github.com/solanyn/containers/pkgs/container/tautulli) | master | ghcr.io/solanyn/tautulli

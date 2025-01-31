@@ -1,4 +1,4 @@
-FROM ubuntu:plucky
+FROM ubuntu:plucky-20241213
 
 ARG TARGETPLATFORM
 ARG VERSION

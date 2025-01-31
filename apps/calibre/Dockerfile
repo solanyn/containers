@@ -1,9 +1,8 @@
 FROM docker.io/library/python:3.13-alpine
 
 ARG TARGETPLATFORM
-ARG TARGETARCH
-ARG TARGETOS
 ARG VERSION
+ARG CHANNEL
 
 ENV \
     PYTHONDONTWRITEBYTECODE=1 \
@@ -41,6 +40,11 @@ RUN \
         libxslt-dev \
         linux-headers \
         openldap-dev \
+    && \
+    case "${TARGETPLATFORM}" in \
+        'linux/amd64') export ARCH='x64' ;; \
+        'linux/arm64') export ARCH='arm64' ;; \
+    esac \
     && \
     # Download calibre release
     mkdir -p /app \

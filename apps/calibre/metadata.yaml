@@ -1,0 +1,11 @@
+---
+app: calibre
+source_repo: https://github.com/kovidgoyal/calibre
+# renovate: depName=kovidgoyal/calibre
+version: v7.24.0
+platforms:
+  - linux/amd64
+  - linux/arm64
+type: web
+tests:
+  enabled: true

@@ -23,6 +23,7 @@ RUN \
     apt-get -qq update \
     && \
     apt-get -qq install -y \
+        curl \
         catatonit \
         libegl1 \
         libfontconfig1 \

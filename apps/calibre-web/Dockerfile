@@ -39,7 +39,7 @@ RUN \
         libxkbcommon0 \
         libxrandr2 \
         libxslt1.1 \
-        python3 \
+        python3-full \
         python3-pip \
         python3-pkg-resources \
     && \

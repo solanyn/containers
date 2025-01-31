@@ -37,6 +37,7 @@ RUN \
         jo \
         jq \
         libxml2 \
+        libxml2-dev \
         libxslt \
         mediainfo \
         nano \
@@ -48,12 +49,12 @@ RUN \
     apk add --no-cache --virtual .build-deps \
         build-base \
         cargo \
-        gcc \
         g++ \
         libffi-dev \
         libpq-dev \
         libxml2-dev \
         libxslt-dev \
+        python-dev \
     && \
     curl -fsSL -o /tmp/app.zip "https://github.com/morpheus65535/bazarr/releases/download/v${VERSION}/bazarr.zip" \
     && unzip -q /tmp/app.zip -d /app/bin \

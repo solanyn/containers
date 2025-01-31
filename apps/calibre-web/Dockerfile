@@ -54,9 +54,9 @@ RUN \
     mkdir -p /app \
     && curl -fsSL https://github.com/janeczku/calibre-web/archive/refs/tags/${VERSION}.tar.gz \
         | tar xzf - -C /app --strip-components=1 \
-    && pip install --upgrade pip \
-    && pip install --upgrade --requirement /app/requirements.txt \
-    && pip install --upgrade --requirement /app/optional-requirements.txt \
+    && pip install --upgrade pip uv \
+    && uv pip install --system --requirement /app/requirements.txt \
+    && uv pip install --system --requirement /app/optional-requirements.txt \
     && apt-get purge -y --auto-remove libldap2-dev libsasl2-dev python3-dev gcc g++\
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && apt-get autoremove -y \

@@ -1,4 +1,4 @@
-FROM ghcr.io/solanyn/calibre:7.24.0 as calibre
+FROM ghcr.io/solanyn/calibre:7.24.0 AS calibre
 
 FROM ubuntu:plucky-20241213
 
@@ -68,7 +68,7 @@ RUN \
     && chmod -R 755 /app \
     && printf "umask %d" "${UMASK}" >> /etc/bash.bashrc
 
-COPY --from=calibre / /opt/calibre
+COPY --from=calibre /opt/calibre /opt/calibre
 
 COPY ./apps/calibre-web/entrypoint.sh /entrypoint.sh
 

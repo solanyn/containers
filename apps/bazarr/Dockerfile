@@ -1,4 +1,4 @@
-FROM docker.io/library/python:3.13-alpine
+FROM docker.io/library/python:3.12-alpine
 
 ARG TARGETPLATFORM
 ARG VERSION
@@ -37,7 +37,6 @@ RUN \
         jo \
         jq \
         libxml2 \
-        libxml2-dev \
         libxslt \
         mediainfo \
         nano \
@@ -49,12 +48,10 @@ RUN \
     apk add --no-cache --virtual .build-deps \
         build-base \
         cargo \
-        g++ \
         libffi-dev \
         libpq-dev \
         libxml2-dev \
         libxslt-dev \
-        python-dev \
     && \
     curl -fsSL -o /tmp/app.zip "https://github.com/morpheus65535/bazarr/releases/download/v${VERSION}/bazarr.zip" \
     && unzip -q /tmp/app.zip -d /app/bin \

@@ -68,6 +68,8 @@ RUN \
 
 COPY --from=calibre / /opt/calibre
 
+COPY ./apps/calibre-web/entrypoint.sh /entrypoint.sh
+
 USER nobody:nogroup
 WORKDIR /config
 VOLUME ["/config"]

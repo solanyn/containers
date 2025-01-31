@@ -50,6 +50,8 @@ RUN \
     && chmod -R 755 /app \
     && printf "umask %d" "${UMASK}" >> /etc/bash.bashrc
 
+COPY ./apps/calibre/entrypoint.sh /entrypoint.sh
+
 USER nobody:nogroup
 WORKDIR /config
 VOLUME ["/config"]

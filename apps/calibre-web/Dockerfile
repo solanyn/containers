@@ -1,6 +1,6 @@
 FROM ghcr.io/solanyn/calibre:7.24.0 as calibre
 
-FROM ubuntu:plucky
+FROM ubuntu:plucky-20241213
 
 ENV \
     PYTHONDONTWRITEBYTECODE=1 \

@@ -48,6 +48,7 @@ RUN \
     apk add --no-cache --virtual .build-deps \
         build-base \
         cargo \
+        gcc \
         libffi-dev \
         libpq-dev \
         libxml2-dev \

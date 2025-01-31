@@ -65,7 +65,7 @@ RUN \
 
 COPY --from=ghcr.io/solanyn/calibre:7.24.0 /app/calibre /opt/calibre
 COPY --from=ghcr.io/solanyn/kepubify:4.0.4 /app/kepubify /opt/kepubify/kepubify
-COPY ./entrypoint.sh /entrypoint.sh
+COPY ./apps/calibre-web/entrypoint.sh /entrypoint.sh
 
 USER nobody:nogroup
 

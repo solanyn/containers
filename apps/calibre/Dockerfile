@@ -44,7 +44,7 @@ RUN \
     && \
     # Download calibre release
     mkdir -p /app \
-    curl -fsSL "https://download.calibre-ebook.com/${VERSION}/calibre-${VERSION}-${ARCH}.txz" \
+    && curl -fsSL "https://download.calibre-ebook.com/${VERSION}/calibre-${VERSION}-${ARCH}.txz" \
         | tar Jxvf - -C /app \
     && /app/calibre_postinstall \
     # Cleanup

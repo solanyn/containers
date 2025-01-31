@@ -6,11 +6,6 @@ ARG TARGETOS
 
 ARG VERSION
 
-LABEL dev.bjw-s.image.target_platform=$TARGETPLATFORM
-LABEL dev.bjw-s.image.target_architecture=$TARGETARCH
-LABEL dev.bjw-s.image.target_os=$TARGETOS
-LABEL org.opencontainers.image.source="https://github.com/pgaskin/kepubify"
-
 USER root
 WORKDIR /app
 
@@ -31,3 +26,5 @@ RUN \
     && chmod -R 755 /app
 
 CMD [ "/app/kepubify" ]
+
+LABEL org.opencontainers.image.source="https://github.com/pgaskin/kepubify"

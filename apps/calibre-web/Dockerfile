@@ -27,7 +27,7 @@ RUN \
         libfontconfig1 \
         libgl1 \
         libglx-mesa0 \
-        libldap \
+        libldap2 \
         libnss3 \
         libopengl0 \
         libsasl2-2 \

@@ -1,73 +1,58 @@
-FROM docker.io/library/python:3.13-alpine
+FROM ghcr.io/cdloh/ubuntu:jammy-20240911.1@sha256:5b3331a295bce482e583ea552dcf62629b51504fb7be21a0ef7d3619a35804ca
 
 ARG TARGETPLATFORM
 ARG VERSION
-ARG CHANNEL
 
-ENV \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PIP_ROOT_USER_ACTION=ignore \
-    PIP_NO_CACHE_DIR=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    PIP_BREAK_SYSTEM_PACKAGES=1
+ENV CALIBRE__CREATE_LIBRARY="true" \
+    CALIBRE__LIBRARY="/config" \
+    CALIBRE__PORT="8080"
 
-ENV \
-    CALIBRE_DBPATH=/config \
-    UMASK="0002"
-
-USER root
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # hadolint ignore=DL3008,DL3015,SC2086
 RUN \
-    apk add --no-cache \
-        bash \
-        ca-certificates \
-        ghostscript \
-        libc6-compat \
-        libldap \
-        libmagic \
-        libsasl \
-        libxi \
-        libxml2 \
-        libxslt \
-    && \
-    apk add --no-cache --virtual=.build-deps \
-        build-base \
-        curl \
-        gcc \
-        libffi-dev \
-        libxml2-dev \
-        libxslt-dev \
-        linux-headers \
-        openldap-dev \
-        xdg-utils \
-        xz \
-    && \
     case "${TARGETPLATFORM}" in \
-        'linux/amd64') export ARCH='x86_64' ;; \
-        'linux/arm64') export ARCH='arm64' ;; \
+        'linux/amd64') \
+            export ARCH='x86_64'; \
+        ;; \
+        'linux/arm64') \
+            export ARCH='arm64'; \
+        ;; \
     esac \
     && \
-    # Download calibre release
-    mkdir -p /app \
-    && curl -fsSL "https://download.calibre-ebook.com/${VERSION}/calibre-${VERSION}-${ARCH}.txz" \
+    apt-get -qq update \
+    && \
+    apt-get -qq install -y \
+        catatonit \
+        libegl1 \
+        libfontconfig1 \
+        libgl1-mesa-glx \
+        libopengl0 \
+        libxdamage1 \
+        libxkbcommon0 \
+        python3 \
+        xz-utils \
+    && \
+    mkdir -p /opt/calibre \
+    && \
+    curl -fsSL "https://download.calibre-ebook.com/${VERSION}/calibre-${VERSION}-${ARCH}.txz" \
         | tar Jxvf - -C /app \
     && /app/calibre_postinstall \
-    # Cleanup
-    && apk del --purge .build-deps \
-    && rm -rf \
-        /root/.cache \
-        /root/.cargo \
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+    && apt-get autoremove -y \
+    && apt-get clean \
+    && \
+    rm -rf \
         /tmp/* \
-    # Set permissions
-    && chmod -R 755 /app
-
-COPY ./apps/calibre/entrypoint.sh /entrypoint.sh
+        /var/lib/apt/lists/* \
+        /var/tmp/ \
+    && chown -R root:root /app \
+    && chmod -R 755 /app \
+    && printf "umask %d" "${UMASK}" >> /etc/bash.bashrc
 
 USER nobody:nogroup
 WORKDIR /config
-VOLUME [ "/config" ]
+VOLUME ["/config"]
 
 ENTRYPOINT ["/usr/bin/catatonit", "--", "/entrypoint.sh"]
 

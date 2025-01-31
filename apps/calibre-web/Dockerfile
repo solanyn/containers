@@ -1,74 +1,77 @@
-FROM docker.io/library/python:3.13-alpine
+FROM ghcr.io/solanyn/calibre:7.24.0 as calibre
 
-ARG TARGETPLATFORM
-ARG TARGETARCH
-ARG TARGETOS
-
-ARG VERSION="0.6.23"
-
-LABEL org.opencontainers.image.source="https://github.com/janeczku/calibre-web"
+FROM ubuntu:plucky
 
 ENV \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_ROOT_USER_ACTION=ignore \
     PIP_NO_CACHE_DIR=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    PIP_BREAK_SYSTEM_PACKAGES=1
+    PIP_DISABLE_PIP_VERSION_CHECK=1
 
 ENV \
-    CALIBRE_DBPATH=/config \
-    UMASK="0002"
+    CALIBRE_DBPATH=/config
 
-USER root
+ARG VERSION
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # hadolint ignore=DL3008,DL3015,SC2086
 RUN \
-    apk add --no-cache \
-        bash \
-        ca-certificates \
-        ghostscript \
-        libc6-compat \
-        libldap \
-        libmagic \
-        libsasl \
-        libxi \
-        libxml2 \
-        libxslt \
+    apt-get update \
     && \
-    apk add --no-cache --virtual=.build-deps \
-        build-base \
-        curl \
-        libffi-dev \
-        libxml2-dev \
-        libxslt-dev \
-        linux-headers \
-        openldap-dev \
+    apt-get install -y \
+        catatonit \
+        imagemagick \
+        libegl1 \
+        libfontconfig1 \
+        libgl1-mesa-glx \
+        libldap-2.5-0 \
+        libnss3 \
+        libopengl0 \
+        libsasl2-2 \
+        libxcomposite1 \
+        libxdamage1 \
+        libxi6 \
+        libxkbcommon0 \
+        libxrandr2 \
+        libxslt1.1 \
+        python3 \
+        python3-pip \
+        python3-pkg-resources \
     && \
-    # Download calibre-web release
-    mkdir -p /app \
-    && curl -fsSL https://github.com/janeczku/calibre-web/archive/${VERSION}.tar.gz \
+    # Dev
+    apt-get install -y \
+        libldap2-dev \
+        libsasl2-dev \
+        python3-dev \
+        gcc \
+        g++ \
+    && \
+    curl -fsSL https://github.com/janeczku/calibre-web/archive/refs/tags/${VERSION}.tar.gz \
         | tar xzf - -C /app --strip-components=1 \
-    # Install required python packages
-    && pip install --upgrade pip uv \
-    # TODO: Remove CFLAGS when netifaces installs without it again
-    && CFLAGS="-Wno-int-conversion" uv pip install --system --requirement /app/requirements.txt \
-    && uv pip install --system --requirement /app/optional-requirements.txt \
-    # Cleanup
-    && apk del --purge .build-deps \
-    && rm -rf \
-        /root/.cache \
-        /root/.cargo \
+    && pip install --upgrade pip \
+    && pip install --upgrade --requirement /app/requirements.txt \
+    && pip install --upgrade --requirement /app/optional-requirements.txt \
+    && apt-get purge -y --auto-remove libldap2-dev libsasl2-dev python3-dev gcc g++\
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+    && apt-get autoremove -y \
+    && apt-get clean \
+    && \
+    rm -rf \
         /tmp/* \
-    # Set permissions
-    && chmod -R 755 /app
+        /var/lib/apt/lists/* \
+        /var/tmp/ \
+    && chown -R root:root /app \
+    && chmod -R 755 /app \
+    && printf "umask %d" "${UMASK}" >> /etc/bash.bashrc
 
-COPY --from=ghcr.io/solanyn/calibre:7.24.0 /app/calibre /opt/calibre
-COPY --from=ghcr.io/solanyn/kepubify:4.0.4 /app/kepubify /opt/kepubify/kepubify
-COPY ./apps/calibre-web/entrypoint.sh /entrypoint.sh
+COPY --from=calibre / /opt/calibre
 
 USER nobody:nogroup
-
 WORKDIR /config
-VOLUME [ "/config" ]
-CMD ["/entrypoint.sh"]
+VOLUME ["/config"]
+
+ENTRYPOINT ["/usr/bin/catatonit", "--", "/entrypoint.sh"]
+
+LABEL org.opencontainers.image.source="https://github.com/janeczku/calibre-web"

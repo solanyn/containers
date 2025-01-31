@@ -38,6 +38,8 @@ RUN \
         libxi6 \
         libxkbcommon0 \
         libxrandr2 \
+        libxml2 \
+        libxslt1-dev \
         libxslt1.1 \
         python3-full \
         python3-pip \

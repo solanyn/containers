@@ -49,6 +49,7 @@ RUN \
         build-base \
         cargo \
         gcc \
+        g++ \
         libffi-dev \
         libpq-dev \
         libxml2-dev \

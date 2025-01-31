@@ -45,7 +45,7 @@ RUN \
         xz-utils \
     && \
     case "${TARGETPLATFORM}" in \
-        'linux/amd64') export ARCH='x64' ;; \
+        'linux/amd64') export ARCH='x86_64' ;; \
         'linux/arm64') export ARCH='arm64' ;; \
     esac \
     && \

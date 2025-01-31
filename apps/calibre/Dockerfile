@@ -26,7 +26,8 @@ RUN \
         catatonit \
         libegl1 \
         libfontconfig1 \
-        libgl1-mesa-glx \
+        libgl1 \
+        libglx-mesa0 \
         libopengl0 \
         libxdamage1 \
         libxkbcommon0 \

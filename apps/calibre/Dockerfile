@@ -42,7 +42,7 @@ RUN \
         linux-headers \
         openldap-dev \
         xdg-utils \
-        xz-utils \
+        xz \
     && \
     case "${TARGETPLATFORM}" in \
         'linux/amd64') export ARCH='x86_64' ;; \

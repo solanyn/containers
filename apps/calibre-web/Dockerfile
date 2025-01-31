@@ -49,7 +49,8 @@ RUN \
         gcc \
         g++ \
     && \
-    curl -fsSL https://github.com/janeczku/calibre-web/archive/refs/tags/${VERSION}.tar.gz \
+    mkdir -p /app \
+    && curl -fsSL https://github.com/janeczku/calibre-web/archive/refs/tags/${VERSION}.tar.gz \
         | tar xzf - -C /app --strip-components=1 \
     && pip install --upgrade pip \
     && pip install --upgrade --requirement /app/requirements.txt \

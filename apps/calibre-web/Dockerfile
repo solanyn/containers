@@ -1,7 +1,7 @@
 FROM ghcr.io/solanyn/calibre:7.24.0 AS calibre
 FROM ghcr.io/solanyn/kepubify:4.0.4 AS kepubify
 
-FROM ubuntu:jammy-20240911.1
+FROM ubuntu:24.04
 
 ENV \
     PYTHONDONTWRITEBYTECODE=1 \

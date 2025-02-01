@@ -1,6 +1,6 @@
 FROM ghcr.io/solanyn/calibre:7.24.0 AS calibre
 
-FROM ubuntu:plucky-20241213
+FROM ubuntu:jammy-20240911.1
 
 ENV \
     PYTHONDONTWRITEBYTECODE=1 \
@@ -22,14 +22,11 @@ RUN \
     apt-get update \
     && \
     apt-get install -y \
-        curl \
-        catatonit \
         imagemagick \
         libegl1 \
         libfontconfig1 \
-        libgl1 \
-        libglx-mesa0 \
-        libldap2 \
+        libgl1-mesa-glx \
+        libldap-2.5-0 \
         libnss3 \
         libopengl0 \
         libsasl2-2 \
@@ -38,8 +35,6 @@ RUN \
         libxi6 \
         libxkbcommon0 \
         libxrandr2 \
-        libxml2 \
-        libxslt1-dev \
         libxslt1.1 \
         python3 \
         python3-pip \
@@ -56,9 +51,9 @@ RUN \
     mkdir -p /app \
     && curl -fsSL https://github.com/janeczku/calibre-web/archive/refs/tags/${VERSION}.tar.gz \
         | tar xzf - -C /app --strip-components=1 \
-    && pip install --upgrade pip setuptools \
-    && pip install --break-system-packages --config-settings="--global-option=build" --config-settings="--global-option=force" --requirement /app/requirements.txt \
-    && pip install --break-system-packages --config-settings="--global-option=build" --config-settings="--global-option=force" --requirement /app/optional-requirements.txt \
+    && pip install --upgrade pip \
+    && pip install --upgrade --requirement /app/requirements.txt \
+    && pip install --upgrade --requirement /app/optional-requirements.txt \
     && apt-get purge -y --auto-remove libldap2-dev libsasl2-dev python3-dev gcc g++\
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && apt-get autoremove -y \

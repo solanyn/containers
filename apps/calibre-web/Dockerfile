@@ -1,4 +1,5 @@
 FROM ghcr.io/solanyn/calibre:7.24.0 AS calibre
+FROM ghcr.io/solanyn/kepubify:4.0.4 AS kepubify
 
 FROM ubuntu:jammy-20240911.1
 
@@ -69,7 +70,8 @@ RUN \
     && chmod -R 755 /app \
     && printf "umask %d" "${UMASK}" >> /etc/bash.bashrc
 
-COPY --from=calibre /opt/calibre /opt/calibre
+COPY --from=calibre /app /opt/calibre
+COPY --from=kepubify /app/kepubify /opt/kepubify/kepubify
 
 COPY ./apps/calibre-web/entrypoint.sh /entrypoint.sh
 

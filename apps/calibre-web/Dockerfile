@@ -41,7 +41,7 @@ RUN \
         libxml2 \
         libxslt1-dev \
         libxslt1.1 \
-        python3-full \
+        python3 \
         python3-pip \
         python3-pkg-resources \
     && \
@@ -57,8 +57,8 @@ RUN \
     && curl -fsSL https://github.com/janeczku/calibre-web/archive/refs/tags/${VERSION}.tar.gz \
         | tar xzf - -C /app --strip-components=1 \
     && pip install --upgrade pip setuptools \
-    && pip install --break-system-packages --global-option build --global-option --force --requirement /app/requirements.txt \
-    && pip install --break-system-packages --global-option build --global-option --force --requirement /app/optional-requirements.txt \
+    && pip install --break-system-packages --config-settings="--global-option=build" --config-settings="--global-option=force" --requirement /app/requirements.txt \
+    && pip install --break-system-packages --config-settings="--global-option=build" --config-settings="--global-option=force" --requirement /app/optional-requirements.txt \
     && apt-get purge -y --auto-remove libldap2-dev libsasl2-dev python3-dev gcc g++\
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && apt-get autoremove -y \

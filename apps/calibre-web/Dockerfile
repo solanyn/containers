@@ -28,8 +28,9 @@ RUN \
         imagemagick \
         libegl1 \
         libfontconfig1 \
-        libgl1-mesa-glx \
-        libldap-2.5-0 \
+        libgl1 \
+        libglx-mesa0 \
+        libldap2 \
         libnss3 \
         libopengl0 \
         libsasl2-2 \

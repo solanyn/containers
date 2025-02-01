@@ -57,8 +57,7 @@ RUN \
     && curl -fsSL https://github.com/janeczku/calibre-web/archive/refs/tags/${VERSION}.tar.gz \
         | tar xzf - -C /app --strip-components=1 \
     && pip install --upgrade pip \
-    && pip install --break-system-packages --global-option build --global-option --force --requirement /app/requirements.txt \
-    && pip install --break-system-packages --global-option build --global-option --force --requirement /app/optional-requirements.txt \
+    && pip install --break-system-packages --global-option build --global-option --force --requirement /app/pyproject.toml --all-extras \
     && apt-get purge -y --auto-remove libldap2-dev libsasl2-dev python3-dev gcc g++\
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && apt-get autoremove -y \

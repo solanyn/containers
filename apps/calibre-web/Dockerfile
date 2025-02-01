@@ -22,6 +22,8 @@ RUN \
     apt-get update \
     && \
     apt-get install -y \
+        curl \
+        catatonit \
         imagemagick \
         libegl1 \
         libfontconfig1 \

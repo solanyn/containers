@@ -127,7 +127,6 @@ Container | Channel | Image
 [sonarr](https://github.com/solanyn/containers/pkgs/container/sonarr) | main | ghcr.io/solanyn/sonarr
 [sonarr-develop](https://github.com/solanyn/containers/pkgs/container/sonarr-develop) | develop | ghcr.io/solanyn/sonarr-develop
 [tautulli](https://github.com/solanyn/containers/pkgs/container/tautulli) | master | ghcr.io/solanyn/tautulli
-[volsync](https://github.com/solanyn/containers/pkgs/container/volsync) | stable | ghcr.io/solanyn/volsync
 
 
 ## Deprecations

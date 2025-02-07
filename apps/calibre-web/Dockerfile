@@ -1,4 +1,4 @@
-FROM ghcr.io/solanyn/calibre:7.24.0 AS calibre
+FROM ghcr.io/solanyn/calibre:7.25.0 AS calibre
 FROM ghcr.io/solanyn/kepubify:4.0.4 AS kepubify
 
 FROM ubuntu:24.04

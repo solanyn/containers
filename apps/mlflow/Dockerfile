@@ -40,6 +40,7 @@ WORKDIR /config
 VOLUME ["/config"]
 
 ENV PATH="/app/.venv/bin:$PATH"
+ENV MLFLOW_HOST=0.0.0.0 MLFLOW_PORT=5000
 
 ENTRYPOINT ["/usr/bin/catatonit", "--", "/entrypoint.sh"]
 

@@ -1,4 +1,4 @@
-FROM ghcr.io/astral-sh/uv:python3.13-alpine
+FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim
 
 ARG VERSION
 
@@ -8,33 +8,33 @@ ENV UMASK="0002" \
 USER root
 WORKDIR /app
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 #hadolint ignore=DL3018,DL3059
 RUN \
-    apk add --no-cache \
-        bash \
-        ca-certificates \
-        catatonit \
-        chromaprint \
-        coreutils \
-        curl \
-        icu-libs \
-        jo \
-        jq \
-        libintl \
-        nano \
-        trurl \
-        tzdata \
+    apt-get -qq update \
     && \
-    uv pip install --system --no-cache "mlflow[all]==${VERSION}" \
-    && rm -rf /tmp/*
+    apt-get -qq install -y \
+        catatonit \
+    && \
+    uv tool install --no-cache "mlflow[all]==${VERSION}" \
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+    && apt-get autoremove -y \
+    && apt-get clean \
+    && \
+    rm -rf \
+        /tmp/* \
+        /var/lib/apt/lists/* \
+        /var/tmp/ \
+    && chown -R root:root /app \
+    && chmod -R 755 /app \
+    && printf "umask %d" "${UMASK}" >> /etc/bash.bashrc
 
 COPY ./apps/mlflow/entrypoint.sh /entrypoint.sh
 
 USER nobody:nogroup
 WORKDIR /config
 VOLUME ["/config"]
-
-ENV MLFLOW_HOST=0.0.0.0
 
 ENTRYPOINT ["/usr/bin/catatonit", "--", "/entrypoint.sh"]
 

@@ -17,7 +17,10 @@ RUN \
     apt-get -qq install -y \
         catatonit \
     && \
-    uv tool install --no-cache "mlflow[all]==${VERSION}" \
+    uv venv \
+    && uv pip install --no-cache \
+        "mlflow[extras]==${VERSION}" \
+        psycopg2-binary \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && apt-get autoremove -y \
     && apt-get clean \
@@ -35,6 +38,8 @@ COPY ./apps/mlflow/entrypoint.sh /entrypoint.sh
 USER nobody:nogroup
 WORKDIR /config
 VOLUME ["/config"]
+
+ENV PATH="/app/.venv/bin:$PATH"
 
 ENTRYPOINT ["/usr/bin/catatonit", "--", "/entrypoint.sh"]
 

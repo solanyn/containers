@@ -116,6 +116,7 @@ Container | Channel | Image
 [lidarr](https://github.com/solanyn/containers/pkgs/container/lidarr) | master | ghcr.io/solanyn/lidarr
 [lidarr-develop](https://github.com/solanyn/containers/pkgs/container/lidarr-develop) | develop | ghcr.io/solanyn/lidarr-develop
 [lidarr-nightly](https://github.com/solanyn/containers/pkgs/container/lidarr-nightly) | nightly | ghcr.io/solanyn/lidarr-nightly
+[mlflow](https://github.com/solanyn/containers/pkgs/container/mlflow) | stable | ghcr.io/solanyn/mlflow
 [plex](https://github.com/solanyn/containers/pkgs/container/plex) | stable | ghcr.io/solanyn/plex
 [postgres-init](https://github.com/solanyn/containers/pkgs/container/postgres-init) | stable | ghcr.io/solanyn/postgres-init
 [prowlarr](https://github.com/solanyn/containers/pkgs/container/prowlarr) | master | ghcr.io/solanyn/prowlarr

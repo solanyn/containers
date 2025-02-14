@@ -1,7 +1,7 @@
 ---
 # https://github.com/aelsabbahy/goss/blob/master/docs/manual.md#file
 file:
-  /app/.venv/mlflow:
+  /app/.venv/bin/mlflow:
     exists: true
 # https://github.com/aelsabbahy/goss/blob/master/docs/manual.md#port
 # port:

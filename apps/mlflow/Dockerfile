@@ -1,7 +1,5 @@
 FROM ghcr.io/astral-sh/uv:python3.13-alpine
 
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-
 ARG VERSION
 
 ENV UMASK="0002" \

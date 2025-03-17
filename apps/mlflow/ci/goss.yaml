@@ -4,12 +4,11 @@ file:
   /app/.venv/bin/mlflow:
     exists: true
 # https://github.com/aelsabbahy/goss/blob/master/docs/manual.md#port
-# port:
-#   # https://github.com/aelsabbahy/goss/issues/149
-#   tcp6:5000:
-#     listening: true
-#
-# # https://github.com/aelsabbahy/goss/blob/master/docs/manual.md#http
-# http:
-#   http://localhost:5000:
-#     status: 200
+port:
+  # https://github.com/aelsabbahy/goss/issues/149
+  tcp6:5000:
+    listening: true
+# https://github.com/aelsabbahy/goss/blob/master/docs/manual.md#http
+http:
+  http://localhost:5000:
+    status: 200

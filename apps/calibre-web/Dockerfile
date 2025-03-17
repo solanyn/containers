@@ -73,12 +73,10 @@ RUN \
 COPY --from=calibre /app /opt/calibre
 COPY --from=kepubify /app/kepubify /opt/kepubify/kepubify
 
-COPY ./apps/calibre-web/entrypoint.sh /entrypoint.sh
-
 USER nobody:nogroup
 WORKDIR /config
 VOLUME ["/config"]
 
-ENTRYPOINT ["/usr/bin/catatonit", "--", "/entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/catatonit", "--", "python3", "/app/cps.py", "-o", "/dev/stdout"]
 
 LABEL org.opencontainers.image.source="https://github.com/janeczku/calibre-web"

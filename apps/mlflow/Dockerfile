@@ -36,14 +36,12 @@ RUN \
     && chmod -R 755 /app \
     && printf "umask %d" "${UMASK}" >> /etc/bash.bashrc
 
-COPY ./apps/mlflow/entrypoint.sh /entrypoint.sh
-
 USER nobody:nogroup
 WORKDIR /config
 VOLUME ["/config"]
 
 ENV PATH="/app/.venv/bin:$PATH"
 
-ENTRYPOINT ["/usr/bin/catatonit", "--", "/entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/catatonit", "--", "mlflow", "server", "--host", "0.0.0.0"]
 
 LABEL org.opencontainers.image.source="https://github.com/mlflow/mlflow"

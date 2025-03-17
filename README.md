@@ -1,9 +1,4 @@
-<!---
-NOTE: AUTO-GENERATED FILE
-to edit this file, instead edit its template at: ./scripts/templates/README.md.j2
--->
 <div align="center">
-
 
 ## Containers
 
@@ -15,7 +10,7 @@ _An opinionated collection of container images_
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/solanyn/containers?style=for-the-badge)
 ![GitHub forks](https://img.shields.io/github/forks/solanyn/containers?style=for-the-badge)
-![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/solanyn/containers/release-scheduled.yaml?style=for-the-badge&label=Scheduled%20Release)
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/solanyn/containers/release.yaml?style=for-the-badge&label=Release)
 
 </div>
 
@@ -36,11 +31,15 @@ We do take a similar approach but instead of appending a `-ls69` or `-r420` pref
 | Container                                          | Immutable |
 |----------------------------------------------------|-----------|
 | `ghcr.io/solanyn/sonarr:rolling`                   | ❌         |
-| `ghcr.io/solanyn/sonarr:3.0.8.1507`                | ❌         |
+| `ghcr.io/solanyn/sonarr:4.0.13.2932`                | ❌         |
 | `ghcr.io/solanyn/sonarr:rolling@sha256:8053...`    | ✅         |
-| `ghcr.io/solanyn/sonarr:3.0.8.1507@sha256:8053...` | ✅         |
+| `ghcr.io/solanyn/sonarr:4.0.13.2932@sha256:8053...` | ✅         |
 
 _If pinning an image to the sha256 digest, tools like [Renovate](https://github.com/renovatebot/renovate) support updating the container on a digest or application version change._
+
+## Eschewed features
+
+There is no multiple "channels" of the same application. For example Prowlarr, Radarr, and Sonarr will only have the develop branch published and not the master "stable" branch. Qbittorrent will only be published with LibTorrent 2.x.
 
 ## Rootless
 
@@ -55,7 +54,7 @@ networks:
     external: true
 services:
   sonarr:
-    image: ghcr.io/solanyn/sonarr:3.0.8.1507
+    image: ghcr.io/solanyn/sonarr:4.0.13.2932
     container_name: sonarr
     user: 65534:65534
     # ...
@@ -101,38 +100,6 @@ Some applications do not support defining configuration via environment variable
 
 For applications that need to have persistent configuration data the config volume is hardcoded to `/config` inside the container. This is not able to be changed in most cases.
 
-## Available Images
-
-Each Image will be built with a `rolling` tag, along with tags specific to it's version. Available Images Below
-
-Container | Channel | Image
---- | --- | ---
-[actions-runner](https://github.com/solanyn/containers/pkgs/container/actions-runner) | stable | ghcr.io/solanyn/actions-runner
-[bazarr](https://github.com/solanyn/containers/pkgs/container/bazarr) | stable | ghcr.io/solanyn/bazarr
-[calibre](https://github.com/solanyn/containers/pkgs/container/calibre) | stable | ghcr.io/solanyn/calibre
-[calibre-web](https://github.com/solanyn/containers/pkgs/container/calibre-web) | stable | ghcr.io/solanyn/calibre-web
-[home-assistant](https://github.com/solanyn/containers/pkgs/container/home-assistant) | stable | ghcr.io/solanyn/home-assistant
-[kepubify](https://github.com/solanyn/containers/pkgs/container/kepubify) | stable | ghcr.io/solanyn/kepubify
-[lidarr](https://github.com/solanyn/containers/pkgs/container/lidarr) | master | ghcr.io/solanyn/lidarr
-[lidarr-develop](https://github.com/solanyn/containers/pkgs/container/lidarr-develop) | develop | ghcr.io/solanyn/lidarr-develop
-[lidarr-nightly](https://github.com/solanyn/containers/pkgs/container/lidarr-nightly) | nightly | ghcr.io/solanyn/lidarr-nightly
-[mlflow](https://github.com/solanyn/containers/pkgs/container/mlflow) | stable | ghcr.io/solanyn/mlflow
-[plex](https://github.com/solanyn/containers/pkgs/container/plex) | stable | ghcr.io/solanyn/plex
-[postgres-init](https://github.com/solanyn/containers/pkgs/container/postgres-init) | stable | ghcr.io/solanyn/postgres-init
-[prowlarr](https://github.com/solanyn/containers/pkgs/container/prowlarr) | master | ghcr.io/solanyn/prowlarr
-[prowlarr-develop](https://github.com/solanyn/containers/pkgs/container/prowlarr-develop) | develop | ghcr.io/solanyn/prowlarr-develop
-[prowlarr-nightly](https://github.com/solanyn/containers/pkgs/container/prowlarr-nightly) | nightly | ghcr.io/solanyn/prowlarr-nightly
-[qbittorrent](https://github.com/solanyn/containers/pkgs/container/qbittorrent) | stable | ghcr.io/solanyn/qbittorrent
-[radarr](https://github.com/solanyn/containers/pkgs/container/radarr) | master | ghcr.io/solanyn/radarr
-[radarr-develop](https://github.com/solanyn/containers/pkgs/container/radarr-develop) | develop | ghcr.io/solanyn/radarr-develop
-[radarr-nightly](https://github.com/solanyn/containers/pkgs/container/radarr-nightly) | nightly | ghcr.io/solanyn/radarr-nightly
-[readarr-develop](https://github.com/solanyn/containers/pkgs/container/readarr-develop) | develop | ghcr.io/solanyn/readarr-develop
-[readarr-nightly](https://github.com/solanyn/containers/pkgs/container/readarr-nightly) | nightly | ghcr.io/solanyn/readarr-nightly
-[sonarr](https://github.com/solanyn/containers/pkgs/container/sonarr) | main | ghcr.io/solanyn/sonarr
-[sonarr-develop](https://github.com/solanyn/containers/pkgs/container/sonarr-develop) | develop | ghcr.io/solanyn/sonarr-develop
-[tautulli](https://github.com/solanyn/containers/pkgs/container/tautulli) | master | ghcr.io/solanyn/tautulli
-
-
 ## Deprecations
 
 Containers here can be **deprecated** at any point, this could be for any reason described below.
@@ -146,4 +113,4 @@ Containers here can be **deprecated** at any point, this could be for any reason
 
 ## Credits
 
-A lot of inspiration and ideas are thanks to the hard work of [hotio.dev](https://hotio.dev/) and [linuxserver.io](https://www.linuxserver.io/) contributors.
+A lot of inspiration and ideas are thanks to the hard work of the home-ops community, [hotio.dev](https://hotio.dev/) and [linuxserver.io](https://www.linuxserver.io/) contributors.

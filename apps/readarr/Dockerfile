@@ -1,18 +1,15 @@
-ARG VERSION
 FROM docker.io/library/alpine:3.21
 
-ARG VERSION
-ARG CHANNEL
 ARG TARGETPLATFORM
-ARG TARGETARCH
-ARG TARGETOS
+ARG VENDOR
+ARG VERSION
 
 ENV UMASK="0002" \
     TZ="Etc/UTC"
 
 ENV \
     DOTNET_EnableDiagnostics="0" \
-    READARR__UPDATE__BRANCH="${CHANNEL}"
+    READARR__UPDATE__BRANCH="develop"
 
 USER root
 WORKDIR /app
@@ -33,7 +30,6 @@ RUN \
         sqlite-libs \
         trurl \
         tzdata \
-        xmlstarlet \
     && \
     case "${TARGETPLATFORM}" in \
         'linux/amd64') export ARCH='x64' ;; \
@@ -42,16 +38,15 @@ RUN \
     && mkdir -p /app/bin \
     && curl -fsSL "https://readarr.servarr.com/v1/update/${READARR__UPDATE__BRANCH}/updatefile?version=${VERSION}&os=linuxmusl&runtime=netcore&arch=${ARCH}" \
         | tar xzf - -C /app/bin --strip-components=1 \
-    && printf "UpdateMethod=docker\nBranch=%s\nPackageVersion=%s\nPackageAuthor=[solanyn](https://github.com/solanyn)\n" "${READARR__UPDATE__BRANCH}" "${VERSION}" > /app/package_info \
+    && printf "UpdateMethod=docker\nBranch=%s\nPackageVersion=%s\nPackageAuthor=[%s](https://github.com/%s)\n" "${READARR__UPDATE__BRANCH}" "${VERSION}" "${VENDOR}" "${VENDOR}" > /app/package_info \
     && chown -R root:root /app && chmod -R 755 /app \
     && rm -rf /tmp/* /app/bin/Readarr.Update
-
-COPY ./apps/readarr/entrypoint.sh /entrypoint.sh
 
 USER nobody:nogroup
 WORKDIR /config
 VOLUME ["/config"]
 
-ENTRYPOINT ["/usr/bin/catatonit", "--", "/entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/catatonit", "--", "/app/bin/Readarr", "--nobrowser", "--data=/config"]
 
 LABEL org.opencontainers.image.source="https://github.com/Readarr/Readarr"
+

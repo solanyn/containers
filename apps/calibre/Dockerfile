@@ -39,7 +39,7 @@ RUN \
     && mkdir -p /app \
     && \
     curl -fsSL "https://download.calibre-ebook.com/${VERSION}/calibre-${VERSION}-${ARCH}.txz" \
-        | tar Jxvf - -C /app \
+        | tar xvf - -C /app --auto-compress \
     && /app/calibre_postinstall \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && apt-get autoremove -y \

@@ -25,6 +25,6 @@ RUN \
         "https://github.com/pgaskin/kepubify/releases/download/v${VERSION}/kepubify-linux-${ARCH}" \
     && chmod -R 755 /app
 
-CMD [ "/app/kepubify" ]
+ENTRYPOINT [ "/app/kepubify" ]
 
 LABEL org.opencontainers.image.source="https://github.com/pgaskin/kepubify"

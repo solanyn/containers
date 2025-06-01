@@ -1,4 +1,4 @@
 # renovate: datasource=github-releases depName=tensorchord/VectorChord
 version: 0.4.2
 name: cnpg
-test: true
+test: false

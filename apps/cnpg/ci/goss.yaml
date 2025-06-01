@@ -1,4 +1,4 @@
 # https://github.com/aelsabbahy/goss/blob/master/docs/manual.md#file
 file:
-  /usr/lib/postgresql/17/bin:
+  /usr/lib/postgresql/17/bin/psql:
     exists: true

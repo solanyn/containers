@@ -1,9 +1,3 @@
----
-app: mysql-init
-semver: true
-channels:
-  - name: stable
-    platforms: ["linux/amd64", "linux/arm64"]
-    stable: true
-    tests:
-      enabled: true
+version: 8
+name: mysql-init
+test: true

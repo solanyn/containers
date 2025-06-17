@@ -1,4 +1,4 @@
 # renovate: datasource=repology depName=alpine_3_22/mysql-client versioning=loose
-version: 11.4
+version: 11.4.5-r2
 name: mysql-init
 test: false

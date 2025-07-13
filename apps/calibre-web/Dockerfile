@@ -6,6 +6,7 @@ ARG TARGETARCH
 ARG CALIBRE_ARCH=${TARGETARCH/amd64/x86_64}
 ARG KEPUBIFY_VERSION
 ARG CALIBRE_WEB_VERSION
+ARG KEPUBIFY_ARCH=${TARGETARCH/amd64/64bit}
 
 ENV \
   PYTHONDONTWRITEBYTECODE=1 \
@@ -58,7 +59,7 @@ RUN \
   && mkdir -p /opt/kepubify \
   && curl -o \
   /opt/kepubify/kepubify -L \
-  "https://github.com/pgaskin/kepubify/releases/download/v${KEPUBIFY_VERSION}/kepubify-linux-${TARGETARCH/amd64/64bit}" \
+  "https://github.com/pgaskin/kepubify/releases/download/v${KEPUBIFY_VERSION}/kepubify-linux-${KEPUBIFY_ARCH}" \
   && chmod +x /opt/kepubify/kepubify \
   # calibre
   && mkdir -p /opt/calibre \

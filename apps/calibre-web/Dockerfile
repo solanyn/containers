@@ -58,7 +58,7 @@ RUN \
   && mkdir -p /opt/kepubify \
   && curl -o \
   /opt/kepubify/kepubify -L \
-  "https://github.com/pgaskin/kepubify/releases/download/v${KEPUBIFY_VERSION}/kepubify-linux-${TARGETARCH}" \
+  "https://github.com/pgaskin/kepubify/releases/download/v${KEPUBIFY_VERSION}/kepubify-linux-${TARGETARCH/amd64/64bit}" \
   && chmod +x /opt/kepubify/kepubify \
   # calibre
   && mkdir -p /opt/calibre \

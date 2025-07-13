@@ -1,11 +1,10 @@
-name: Build and Test Containers
+---
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: Release
 
 on:
   push:
-    branches: [main]
-    paths: ["apps/**"]
-  pull_request:
-    branches: [main]
+    branches: ["main"]
     paths: ["apps/**"]
   workflow_dispatch:
     inputs:
@@ -13,6 +12,11 @@ on:
         type: string
         description: Application Name
         required: true
+      release:
+        type: boolean
+        description: Release
+        required: false
+        default: false
 
 jobs:
   prepare:
@@ -56,8 +60,11 @@ jobs:
     needs: ["changed"]
     uses: ./.github/workflows/app-builder.yaml
     permissions:
-      contents: read
-      packages: read
+      attestations: write
+      contents: write
+      id-token: write
+      packages: write
+      security-events: write
     secrets: inherit
     strategy:
       matrix:
@@ -66,7 +73,7 @@ jobs:
       max-parallel: 4
     with:
       app: ${{ matrix.app }}
-      release: false
+      release: ${{ github.event_name == 'workflow_dispatch' && inputs.release || github.event_name == 'push' }}
 
   status:
     if: ${{ !cancelled() }}

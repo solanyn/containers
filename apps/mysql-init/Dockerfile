@@ -1,23 +1,22 @@
-FROM docker.io/library/alpine:3.22
+ARG DEBIAN_VERSION=bookworm-slim
+FROM docker.io/library/debian:${DEBIAN_VERSION}
 
-ARG TARGETPLATFORM
-ARG VERSION
-ARG CHANNEL
-
+ARG MYSQL_CLIENT_VERSION=8.0
 USER root
 WORKDIR /app
 
+# Install MySQL client from Debian repository
 RUN \
-  apk add --no-cache \
-  bash \
-  ca-certificates \
-  catatonit \
-  mariadb-client~"${VERSION}"
+  apt-get update \
+  && apt-get install -y \
+    bash \
+    catatonit \
+    default-mysql-client \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
 COPY entrypoint.sh /entrypoint.sh
 
 USER nobody:nogroup
 
 ENTRYPOINT ["/usr/bin/catatonit", "--", "/entrypoint.sh"]
-
-LABEL org.opencontainers.image.source="https://github.com/mysql/mysql"

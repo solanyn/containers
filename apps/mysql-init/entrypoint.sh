@@ -1,81 +1,78 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-# This is most commonly set to the user 'root'
+# MySQL initialization container entrypoint
+# Inspired by home-operations/containers postgres-init
+
 export INIT_MYSQL_SUPER_USER=${INIT_MYSQL_SUPER_USER:-root}
 export INIT_MYSQL_PORT=${INIT_MYSQL_PORT:-3306}
 
-printf "\e[1;32m%-6s\e[m\n" "INIT_MYSQL_HOST: ${INIT_MYSQL_HOST}"
-printf "\e[1;32m%-6s\e[m\n" "INIT_MYSQL_SUPER_USER: ${INIT_MYSQL_SUPER_USER}"
-printf "\e[1;32m%-6s\e[m\n" "INIT_MYSQL_USER: ${INIT_MYSQL_USER}"
-printf "\e[1;32m%-6s\e[m\n" "INIT_MYSQL_DBNAME: ${INIT_MYSQL_DBNAME}"
+# Check required environment variables
+required_vars=(
+  "INIT_MYSQL_HOST"
+  "INIT_MYSQL_SUPER_PASS"
+  "INIT_MYSQL_USER"
+  "INIT_MYSQL_PASS"
+  "INIT_MYSQL_DBNAME"
+)
 
-if [[ -z "${INIT_MYSQL_HOST}" ||
-  -z "${INIT_MYSQL_SUPER_PASS}" ||
-  -z "${INIT_MYSQL_USER}" ||
-  -z "${INIT_MYSQL_PASS}" ||
-  -z "${INIT_MYSQL_DBNAME}" ]] \
-  ; then
-  printf "\e[1;32m%-6s\e[m\n" "Invalid configuration - missing a required environment variable"
-  [[ -z "${INIT_MYSQL_HOST}" ]] && printf "\e[1;32m%-6s\e[m\n" "INIT_MYSQL_HOST: unset"
-  [[ -z "${INIT_MYSQL_SUPER_PASS}" ]] && printf "\e[1;32m%-6s\e[m\n" "INIT_MYSQL_SUPER_PASS: unset"
-  [[ -z "${INIT_MYSQL_USER}" ]] && printf "\e[1;32m%-6s\e[m\n" "INIT_MYSQL_USER: unset"
-  [[ -z "${INIT_MYSQL_PASS}" ]] && printf "\e[1;32m%-6s\e[m\n" "INIT_MYSQL_PASS: unset"
-  [[ -z "${INIT_MYSQL_DBNAME}" ]] && printf "\e[1;32m%-6s\e[m\n" "INIT_MYSQL_DBNAME: unset"
+missing_vars=()
+for var in "${required_vars[@]}"; do
+  if [[ -z "${!var:-}" ]]; then
+    missing_vars+=("$var")
+  fi
+done
+
+if [[ ${#missing_vars[@]} -gt 0 ]]; then
+  printf "\e[1;31m%-6s\e[m\n" "ERROR: Missing required environment variables:"
+  for var in "${missing_vars[@]}"; do
+    printf "\e[1;31m%-6s\e[m\n" "  - $var"
+  done
+  printf "\e[1;33m%-6s\e[m\n" ""
+  printf "\e[1;33m%-6s\e[m\n" "Required environment variables:"
+  printf "\e[1;33m%-6s\e[m\n" "  INIT_MYSQL_HOST       - MySQL server hostname"
+  printf "\e[1;33m%-6s\e[m\n" "  INIT_MYSQL_SUPER_PASS - MySQL root/admin password"
+  printf "\e[1;33m%-6s\e[m\n" "  INIT_MYSQL_USER       - Username to create"
+  printf "\e[1;33m%-6s\e[m\n" "  INIT_MYSQL_PASS       - Password for the user"
+  printf "\e[1;33m%-6s\e[m\n" "  INIT_MYSQL_DBNAME     - Database name(s) to create (space-separated)"
+  printf "\e[1;33m%-6s\e[m\n" ""
+  printf "\e[1;33m%-6s\e[m\n" "Optional environment variables:"
+  printf "\e[1;33m%-6s\e[m\n" "  INIT_MYSQL_SUPER_USER - MySQL admin username (default: root)"
+  printf "\e[1;33m%-6s\e[m\n" "  INIT_MYSQL_PORT       - MySQL port (default: 3306)"
   exit 1
 fi
 
-# Set the MYSQL_PWD environment variable to avoid password prompt
-export MYSQL_PWD="${INIT_MYSQL_SUPER_PASS}"
-
-printf "\e[1;32m%-6s\e[m\n" "Attempting to connect to MySQL at ${INIT_MYSQL_HOST}:${INIT_MYSQL_PORT} as ${INIT_MYSQL_SUPER_USER}"
-
 # Wait for MySQL to be ready
-max_attempts=30
-attempts=0
-until mariadb-admin ping -h "${INIT_MYSQL_HOST}" --port "${INIT_MYSQL_PORT}" -u "${INIT_MYSQL_SUPER_USER}" --silent; do
-  if ((attempts == max_attempts)); then
-    printf "\e[1;32m%-6s\e[m\n" "MySQL is not ready after ${max_attempts} attempts, exiting."
-    exit 1
-  fi
-  printf "\e[1;32m%-6s\e[m\n" "Waiting for Host '${INIT_MYSQL_HOST}' on port '${INIT_MYSQL_PORT}' ..."
-  attempts=$((attempts + 1))
-  sleep 5
+printf "\e[1;32m%-6s\e[m\n" "Waiting for MySQL host '${INIT_MYSQL_HOST}' on port '${INIT_MYSQL_PORT}' ..."
+until mysqladmin ping -h "${INIT_MYSQL_HOST}" -P "${INIT_MYSQL_PORT}" -u "${INIT_MYSQL_SUPER_USER}" -p"${INIT_MYSQL_SUPER_PASS}" --silent; do
+  printf "\e[1;32m%-6s\e[m\n" "MySQL not ready, waiting..."
+  sleep 1
 done
 
-printf "\e[1;32m%-6s\e[m\n" "Successfully connected to MySQL at ${INIT_MYSQL_HOST}:${INIT_MYSQL_PORT}"
+printf "\e[1;32m%-6s\e[m\n" "MySQL is ready!"
 
 # Create user if it doesn't exist
-mariadb -h "${INIT_MYSQL_HOST}" --port "${INIT_MYSQL_PORT}" -u "${INIT_MYSQL_SUPER_USER}" -p"${INIT_MYSQL_SUPER_PASS}" \
-  -e "CREATE USER IF NOT EXISTS '${INIT_MYSQL_USER}'@'%' IDENTIFIED BY '${INIT_MYSQL_PASS}';"
-printf "\e[1;32m%-6s\e[m\n" "User ${INIT_MYSQL_USER} created or already exists"
+printf "\e[1;32m%-6s\e[m\n" "Creating user '${INIT_MYSQL_USER}' if it doesn't exist..."
+mysql -h "${INIT_MYSQL_HOST}" -P "${INIT_MYSQL_PORT}" -u "${INIT_MYSQL_SUPER_USER}" -p"${INIT_MYSQL_SUPER_PASS}" <<MYSQL_SCRIPT
+CREATE USER IF NOT EXISTS '${INIT_MYSQL_USER}'@'%' IDENTIFIED BY '${INIT_MYSQL_PASS}';
+MYSQL_SCRIPT
 
-# Update user password
-mariadb -h "${INIT_MYSQL_HOST}" --port "${INIT_MYSQL_PORT}" -u "${INIT_MYSQL_SUPER_USER}" -p"${INIT_MYSQL_SUPER_PASS}" \
-  -e "ALTER USER '${INIT_MYSQL_USER}'@'%' IDENTIFIED BY '${INIT_MYSQL_PASS}';"
-printf "\e[1;32m%-6s\e[m\n" "Password for user ${INIT_MYSQL_USER} updated"
-
-# Create and grant privileges for each database
-for db in ${INIT_MYSQL_DBNAME}; do
-  # Create database if it doesn't exist
-  mariadb -h "${INIT_MYSQL_HOST}" --port "${INIT_MYSQL_PORT}" -u "${INIT_MYSQL_SUPER_USER}" -p"${INIT_MYSQL_SUPER_PASS}" \
-    -e "CREATE DATABASE IF NOT EXISTS ${db};"
-  printf "\e[1;32m%-6s\e[m\n" "Database ${db} created or already exists"
-
-  # Grant privileges
-  mariadb -h "${INIT_MYSQL_HOST}" --port "${INIT_MYSQL_PORT}" -u "${INIT_MYSQL_SUPER_USER}" -p"${INIT_MYSQL_SUPER_PASS}" \
-    -e "GRANT ALL PRIVILEGES ON ${db}.* TO '${INIT_MYSQL_USER}'@'%';"
-  printf "\e[1;32m%-6s\e[m\n" "Granted all privileges on ${db} to ${INIT_MYSQL_USER}"
-
-  # Initialize database if init file exists
-  if [[ -f "/docker-entrypoint-initdb.d/${db}.sql" ]]; then
-    printf "\e[1;32m%-6s\e[m\n" "Initializing ${db} with schema..."
-    mariadb -h "${INIT_MYSQL_HOST}" --port "${INIT_MYSQL_PORT}" -u "${INIT_MYSQL_SUPER_USER}" -p"${INIT_MYSQL_SUPER_PASS}" "${db}" \
-      <"/docker-entrypoint-initdb.d/${db}.sql"
-    printf "\e[1;32m%-6s\e[m\n" "Database ${db} initialized with schema"
-  fi
+# Create databases and grant privileges
+for dbname in ${INIT_MYSQL_DBNAME}; do
+  printf "\e[1;32m%-6s\e[m\n" "Creating database '${dbname}' and granting privileges to '${INIT_MYSQL_USER}'..."
+  mysql -h "${INIT_MYSQL_HOST}" -P "${INIT_MYSQL_PORT}" -u "${INIT_MYSQL_SUPER_USER}" -p"${INIT_MYSQL_SUPER_PASS}" <<MYSQL_SCRIPT
+CREATE DATABASE IF NOT EXISTS \`${dbname}\`;
+GRANT ALL PRIVILEGES ON \`${dbname}\`.* TO '${INIT_MYSQL_USER}'@'%';
+MYSQL_SCRIPT
 done
 
 # Flush privileges
-mariadb -h "${INIT_MYSQL_HOST}" --port "${INIT_MYSQL_PORT}" -u "${INIT_MYSQL_SUPER_USER}" -p"${INIT_MYSQL_SUPER_PASS}" \
-  -e "FLUSH PRIVILEGES;"
-printf "\e[1;32m%-6s\e[m\n" "Privileges flushed"
+printf "\e[1;32m%-6s\e[m\n" "Flushing privileges..."
+mysql -h "${INIT_MYSQL_HOST}" -P "${INIT_MYSQL_PORT}" -u "${INIT_MYSQL_SUPER_USER}" -p"${INIT_MYSQL_SUPER_PASS}" <<MYSQL_SCRIPT
+FLUSH PRIVILEGES;
+MYSQL_SCRIPT
+
+printf "\e[1;32m%-6s\e[m\n" "MySQL initialization completed successfully!"
+printf "\e[1;32m%-6s\e[m\n" "Created user: ${INIT_MYSQL_USER}"
+printf "\e[1;32m%-6s\e[m\n" "Created databases: ${INIT_MYSQL_DBNAME}"
+

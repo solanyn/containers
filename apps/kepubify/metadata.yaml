@@ -1,4 +1,0 @@
-# renovate: datasource=github-releases depName=pgaskin/kepubify
-version: 4.0.4
-name: kepubify
-test: true

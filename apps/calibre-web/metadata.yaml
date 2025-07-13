@@ -1,5 +1,0 @@
-
-# renovate: datasource=github-releases depName=janeczku/calibre-web
-version: 0.6.24
-name: calibre-web
-test: true

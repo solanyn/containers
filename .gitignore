@@ -1,5 +1,0 @@
-.private/
-.task/
-.venv/
-__pycache__/
-**/*.pyc

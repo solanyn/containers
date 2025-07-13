@@ -1,4 +1,0 @@
-# renovate: datasource=github-releases depName=kovidgoyal/calibre
-version: 8.6.0
-name: calibre
-test: true

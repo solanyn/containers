@@ -18,6 +18,13 @@ RUN \
   ca-certificates \
   catatonit \
   xz-utils \
+  libegl1-mesa \
+  libgl1-mesa-glx \
+  libxcb-xinerama0 \
+  libxcb-cursor0 \
+  libqt6gui6 \
+  libqt6widgets6 \
+  libqt6core6 \
   && mkdir -p /app \
   && curl -fsSL "https://github.com/kovidgoyal/calibre/releases/download/v${CALIBRE_VERSION}/calibre-${CALIBRE_VERSION}-${TARGETARCH}.txz" \
   | tar Jxvf - -C /app \

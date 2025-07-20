@@ -14,7 +14,6 @@ RUN uv venv && \
 
 FROM python:3.13-slim-bookworm
 
-ARG TARGETARCH
 ARG VERSION=3.1.1
 
 RUN groupadd -g 1001 mlflow && \
@@ -41,8 +40,8 @@ ENV MLFLOW_DEFAULT_ARTIFACT_ROOT=file:///config/artifacts
 ENV MLFLOW_HOST=0.0.0.0
 ENV MLFLOW_PORT=5000
 
-CMD ["mlflow", "server", \
-  "--backend-store-uri", "${MLFLOW_BACKEND_STORE_URI}", \
-  "--default-artifact-root", "${MLFLOW_DEFAULT_ARTIFACT_ROOT}", \
-  "--host", "${MLFLOW_HOST}", \
-  "--port", "${MLFLOW_PORT}"]
+CMD mlflow server \
+  --backend-store-uri $MLFLOW_BACKEND_STORE_URI \
+  --default-artifact-root $MLFLOW_DEFAULT_ARTIFACT_ROOT \
+  --host $MLFLOW_HOST \
+  --port $MLFLOW_PORT

@@ -27,6 +27,13 @@ RUN \
   ca-certificates \
   catatonit \
   imagemagick \
+  libegl1-mesa \
+  libgl1-mesa-glx \
+  libxcb-xinerama0 \
+  libxcb-cursor0 \
+  libqt6gui6 \
+  libqt6widgets6 \
+  libqt6core6 \
   libldap-2.5-0 \
   libsasl2-2 \
   libx11-6 \

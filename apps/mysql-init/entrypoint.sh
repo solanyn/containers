@@ -6,6 +6,7 @@ set -euo pipefail
 
 export INIT_MYSQL_SUPER_USER=${INIT_MYSQL_SUPER_USER:-root}
 export INIT_MYSQL_PORT=${INIT_MYSQL_PORT:-3306}
+export INIT_MYSQL_USE_NATIVE_PASSWORD=${INIT_MYSQL_USE_NATIVE_PASSWORD:-false}
 
 # Check required environment variables
 required_vars=(
@@ -37,8 +38,9 @@ if [[ ${#missing_vars[@]} -gt 0 ]]; then
   printf "\e[1;33m%-6s\e[m\n" "  INIT_MYSQL_DBNAME     - Database name(s) to create (space-separated)"
   printf "\e[1;33m%-6s\e[m\n" ""
   printf "\e[1;33m%-6s\e[m\n" "Optional environment variables:"
-  printf "\e[1;33m%-6s\e[m\n" "  INIT_MYSQL_SUPER_USER - MySQL admin username (default: root)"
-  printf "\e[1;33m%-6s\e[m\n" "  INIT_MYSQL_PORT       - MySQL port (default: 3306)"
+  printf "\e[1;33m%-6s\e[m\n" "  INIT_MYSQL_SUPER_USER        - MySQL admin username (default: root)"
+  printf "\e[1;33m%-6s\e[m\n" "  INIT_MYSQL_PORT              - MySQL port (default: 3306)"
+  printf "\e[1;33m%-6s\e[m\n" "  INIT_MYSQL_USE_NATIVE_PASSWORD - Use mysql_native_password plugin (default: false)"
   exit 1
 fi
 
@@ -53,9 +55,16 @@ printf "\e[1;32m%-6s\e[m\n" "MySQL is ready!"
 
 # Create user if it doesn't exist
 printf "\e[1;32m%-6s\e[m\n" "Creating user '${INIT_MYSQL_USER}' if it doesn't exist..."
-mysql -h "${INIT_MYSQL_HOST}" -P "${INIT_MYSQL_PORT}" -u "${INIT_MYSQL_SUPER_USER}" -p"${INIT_MYSQL_SUPER_PASS}" <<MYSQL_SCRIPT
+if [[ "${INIT_MYSQL_USE_NATIVE_PASSWORD}" == "true" ]]; then
+  printf "\e[1;32m%-6s\e[m\n" "Using mysql_native_password authentication plugin..."
+  mysql -h "${INIT_MYSQL_HOST}" -P "${INIT_MYSQL_PORT}" -u "${INIT_MYSQL_SUPER_USER}" -p"${INIT_MYSQL_SUPER_PASS}" <<MYSQL_SCRIPT
+CREATE USER IF NOT EXISTS '${INIT_MYSQL_USER}'@'%' IDENTIFIED WITH mysql_native_password BY '${INIT_MYSQL_PASS}';
+MYSQL_SCRIPT
+else
+  mysql -h "${INIT_MYSQL_HOST}" -P "${INIT_MYSQL_PORT}" -u "${INIT_MYSQL_SUPER_USER}" -p"${INIT_MYSQL_SUPER_PASS}" <<MYSQL_SCRIPT
 CREATE USER IF NOT EXISTS '${INIT_MYSQL_USER}'@'%' IDENTIFIED BY '${INIT_MYSQL_PASS}';
 MYSQL_SCRIPT
+fi
 
 # Create databases and grant privileges
 for dbname in ${INIT_MYSQL_DBNAME}; do

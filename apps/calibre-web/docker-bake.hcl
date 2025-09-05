@@ -11,7 +11,7 @@ variable "KEPUBIFY_VERSION" {
 
 variable "CALIBRE_VERSION" {
   // renovate: datasource=github-releases depName=kovidgoyal/calibre
-  default = "8.9.0"
+  default = "8.10.0"
 }
 
 variable "CALIBRE_WEB_VERSION" {

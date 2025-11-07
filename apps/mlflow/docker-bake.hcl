@@ -6,7 +6,7 @@ variable "APP" {
 
 variable "MLFLOW_VERSION" {
   // renovate: datasource=pypi depName=mlflow
-  default = "3.5.1"
+  default = "3.6.0"
 }
 
 variable "VERSION" {

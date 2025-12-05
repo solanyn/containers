@@ -6,7 +6,7 @@ variable "APP" {
 
 variable "CALIBRE_VERSION" {
   // renovate: datasource=github-releases depName=kovidgoyal/calibre
-  default = "8.16.0"
+  default = "8.16.1"
 }
 
 variable "DEBIAN_VERSION" {

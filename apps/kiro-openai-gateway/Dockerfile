@@ -7,15 +7,15 @@ ENV UV_LINK_MODE=copy
 
 WORKDIR /app
 RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
-RUN uv venv && \
-  uv pip install "git+https://github.com/jwadow/kiro-openai-gateway.git@v${VERSION}"
+RUN git clone --depth 1 --branch v${VERSION} https://github.com/jwadow/kiro-openai-gateway.git .
+RUN uv venv && uv pip install -r requirements.txt
 
 FROM python:3.11-slim-bookworm
 
 RUN groupadd -g 1001 kiro && \
   useradd -u 1001 -g kiro -s /bin/bash -m kiro
 
-COPY --from=builder /app/.venv /app/.venv
+COPY --from=builder /app /app
 
 USER kiro
 WORKDIR /app
@@ -24,4 +24,4 @@ EXPOSE 8000
 
 ENV PATH="/app/.venv/bin:$PATH"
 
-CMD ["python", "-m", "uvicorn", "kiro_gateway:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["python", "main.py"]

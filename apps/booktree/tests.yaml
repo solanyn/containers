@@ -1,0 +1,24 @@
+name: Test booktree
+
+on:
+  workflow_call:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image
+        uses: docker/bake-action@v5
+        with:
+          workdir: ./apps/booktree
+          targets: image-local
+
+      - name: Test container
+        run: |
+          docker run --rm booktree:main --help

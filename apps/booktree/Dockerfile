@@ -1,27 +1,12 @@
-FROM python:3.12-slim-bookworm
+ARG VERSION
 
-ARG VERSION=main
+FROM python:3.12-alpine
 
-RUN groupadd -g 1001 booktree && \
-  useradd -u 1001 -g booktree -s /bin/bash -m booktree
-
-RUN apt-get update && apt-get install -y \
-  ffmpeg \
-  git \
-  && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache ffmpeg git
 
 WORKDIR /app
-
 RUN git clone https://github.com/myxdvz/booktree.git . && \
-  if [ "${VERSION}" != "main" ]; then git checkout "${VERSION}"; fi
+    if [ "${VERSION}" != "main" ]; then git checkout "${VERSION}"; fi && \
+    pip install --no-cache-dir -r requirements.txt
 
-RUN pip install --no-cache-dir -r requirements.txt
-
-RUN mkdir -p /config /source /media && \
-  chown -R booktree:booktree /config /source /media
-
-USER booktree
-
-WORKDIR /config
-
-ENTRYPOINT ["/app/booktree.py"]
+ENTRYPOINT ["python", "booktree.py"]

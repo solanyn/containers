@@ -5,7 +5,7 @@ variable "APP" {
 }
 
 variable "BOOKTREE_VERSION" {
-  // renovate: datasource=github-tags depName=myxdvz/booktree
+  // renovate: datasource=github-commits depName=myxdvz/booktree branch=main
   default = "main"
 }
 

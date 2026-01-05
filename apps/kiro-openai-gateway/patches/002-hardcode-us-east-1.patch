@@ -1,0 +1,17 @@
+diff --git a/kiro_gateway/config.py b/kiro_gateway/config.py
+index 0f74877..0e9d32c 100644
+--- a/kiro_gateway/config.py
++++ b/kiro_gateway/config.py
+@@ -120,10 +120,10 @@ def _get_raw_env_value(var_name: str, env_file: str = ".env") -> Optional[str]:
+ AWS_SSO_OIDC_URL_TEMPLATE: str = "https://oidc.{region}.amazonaws.com/token"
+ 
+ # Host for main API (generateAssistantResponse)
+-KIRO_API_HOST_TEMPLATE: str = "https://codewhisperer.{region}.amazonaws.com"
++KIRO_API_HOST_TEMPLATE: str = "https://codewhisperer.us-east-1.amazonaws.com"
+ 
+ # Host for Q API (ListAvailableModels)
+-KIRO_Q_HOST_TEMPLATE: str = "https://q.{region}.amazonaws.com"
++KIRO_Q_HOST_TEMPLATE: str = "https://q.us-east-1.amazonaws.com"
+ 
+ # ==================================================================================================
+ # Token Settings

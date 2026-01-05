@@ -1,0 +1,16 @@
+diff --git a/kiro_gateway/routes.py b/kiro_gateway/routes.py
+index b07421b..7f25641 100644
+--- a/kiro_gateway/routes.py
++++ b/kiro_gateway/routes.py
+@@ -78,9 +78,10 @@ async def verify_api_key(auth_header: str = Security(api_key_header)) -> bool:
+     Raises:
+         HTTPException: 401 if key is invalid or missing
+     """
+-    if not auth_header or auth_header != f"Bearer {PROXY_API_KEY}":
+-        logger.warning("Access attempt with invalid API key.")
+-        raise HTTPException(status_code=401, detail="Invalid or missing API Key")
++    if PROXY_API_KEY and PROXY_API_KEY != "changeme_proxy_secret":
++        if not auth_header or auth_header != f"Bearer {PROXY_API_KEY}":
++            logger.warning("Access attempt with invalid API key.")
++            raise HTTPException(status_code=401, detail="Invalid or missing API Key")
+     return True

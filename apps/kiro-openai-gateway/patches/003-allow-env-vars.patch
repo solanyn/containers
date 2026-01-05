@@ -1,0 +1,30 @@
+diff --git a/main.py b/main.py
+index 1234567..abcdefg 100644
+--- a/main.py
++++ b/main.py
+@@ -28,6 +28,7 @@
+ """
+ 
+ import logging
++import os
+ import sys
+ from contextlib import asynccontextmanager
+ from pathlib import Path
+@@ -175,13 +176,14 @@ def validate_configuration() -> None:
+     """
+     errors = []
+     
+-    # Check if .env file exists
++    # Check if .env file exists (skip if KIRO_CLI_DB_FILE or KIRO_CREDS_FILE env var is set)
+     env_file = Path(".env")
+     env_example = Path(".env.example")
+     
+-    if not env_file.exists():
++    has_env_config = os.environ.get("KIRO_CLI_DB_FILE") or os.environ.get("KIRO_CREDS_FILE") or os.environ.get("REFRESH_TOKEN")
++    if not env_file.exists() and not has_env_config:
+         errors.append(
+-            ".env file not found!\n"
++            ".env file not found and no credentials in environment!\n"
+             "\n"
+             "To get started:\n"
+             "1. Create .env or rename from .env.example:\n"

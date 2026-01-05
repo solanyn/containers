@@ -5,4 +5,5 @@
 !defaults/
 !scripts/
 !entrypoint.sh
+!patches/
 !requirements.txt

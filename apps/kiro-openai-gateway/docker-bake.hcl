@@ -18,7 +18,6 @@ group "default" {
 }
 
 target "image" {
-  context = "."
   args = {
     VERSION = "${VERSION}"
   }

@@ -4,6 +4,8 @@ FROM ghcr.io/astral-sh/uv:python3.12-alpine AS builder
 
 ARG VERSION
 ARG TARGETARCH
+ADD https://github.com/jwadow/kiro-openai-gateway/archive/refs/tags/${VERSION}.tar.gz /tmp/src.tar.gz
+RUN tar -xzf /tmp/src.tar.gz -C /tmp && mv /tmp/kiro-openai-gateway-* /app
 
 WORKDIR /app
 COPY patches/ /tmp/patches/

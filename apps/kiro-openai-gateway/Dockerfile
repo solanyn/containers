@@ -21,6 +21,8 @@ RUN KIRO_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "aarch64" || echo "x86_64") 
 
 FROM python:3.12-alpine
 
+RUN apk add --no-cache sqlite
+
 WORKDIR /app
 COPY --from=builder /deps /deps
 COPY --from=builder /app/kiro_gateway kiro_gateway

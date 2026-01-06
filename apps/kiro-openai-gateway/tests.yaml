@@ -7,3 +7,5 @@ file:
 command:
   python --version:
     exit-status: 0
+  sqlite3 --version:
+    exit-status: 0

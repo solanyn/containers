@@ -18,7 +18,6 @@ WORKDIR /app
 COPY --from=builder /deps /deps
 COPY --from=builder /app/kiro_gateway kiro_gateway
 COPY --from=builder /app/main.py .
-COPY --from=builder /tmp/kirocli/bin/kiro-cli /usr/local/bin/kiro-cli
 COPY --chmod=755 entrypoint.sh /entrypoint.sh
 
 ENV PYTHONPATH=/deps

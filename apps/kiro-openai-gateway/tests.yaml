@@ -1,1 +1,9 @@
-tests: []
+file:
+  /app/main.py:
+    exists: true
+  /entrypoint.sh:
+    exists: true
+    mode: "0755"
+command:
+  python --version:
+    exit-status: 0

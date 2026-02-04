@@ -6,7 +6,7 @@ variable "APP" {
 
 variable "AIRFLOW_VERSION" {
   // renovate: datasource=docker depName=apache/airflow
-  default = "3.1.6"
+  default = "3.1.7"
 }
 
 variable "VERSION" {

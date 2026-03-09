@@ -41,3 +41,9 @@ RUN curl -sS "https://cache.agilebits.com/dist/1P/op2/pkg/v${OP_VERSION}/op_linu
 # Install python3 via uv
 RUN uv python install 3.13 && \
     ln -sf $(uv python find 3.13) /usr/local/bin/python3
+
+# Add node user for uid 1000 compatibility
+# When sandbox runs as --user 1000:1000, tools like op CLI
+# need a passwd entry to resolve the current user
+RUN echo "node:x:1000:1000::/workspace:/bin/sh" >> /etc/passwd && \
+    echo "node:x:1000:" >> /etc/group

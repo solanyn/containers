@@ -38,7 +38,8 @@ RUN curl -sS "https://cache.agilebits.com/dist/1P/op2/pkg/v${OP_VERSION}/op_linu
     chmod +x /usr/local/bin/op && \
     rm /tmp/op.zip
 
-# Install python3 via uv
+# Install python3 via uv (install to world-readable path for non-root runtime)
+ENV UV_PYTHON_INSTALL_DIR=/opt/uv/python
 RUN uv python install 3.13 && \
     ln -sf $(uv python find 3.13) /usr/local/bin/python3
 

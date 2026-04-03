@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       ca-certificates \
       procps \
       unzip \
+      openssh-client \
     && rm -rf /var/lib/apt/lists/*
 
 # uv (includes python3)

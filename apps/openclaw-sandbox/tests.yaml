@@ -50,3 +50,8 @@ commandTests:
     command: "which"
     args: ["unzip"]
     exitCode: 0
+
+  - name: "ssh exists"
+    command: "which"
+    args: ["ssh"]
+    exitCode: 0

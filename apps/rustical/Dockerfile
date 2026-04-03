@@ -1,45 +1,19 @@
 ARG VERSION
 
-FROM --platform=$BUILDPLATFORM rust:1.94-alpine AS chef
+FROM rust:1.94-alpine AS builder
 
-ARG TARGETPLATFORM
-ARG BUILDPLATFORM
+ARG VERSION
 
-ENV CC_aarch64_unknown_linux_musl="clang"
-ENV AR_aarch64_unknown_linux_musl="llvm21-ar"
-ENV CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_RUSTFLAGS="-Clink-self-contained=yes -Clinker=rust-lld"
-
-RUN case $TARGETPLATFORM in \
-  "linux/amd64") echo x86_64-unknown-linux-musl > /tmp/rust_target;; \
-  "linux/arm64") echo aarch64-unknown-linux-musl > /tmp/rust_target;; \
-  *) echo "Unsupported platform ${TARGETPLATFORM}"; exit 1;;  \
-  esac
-
-RUN apk add --no-cache musl-dev llvm21 clang perl pkgconf make git \
-  && rustup target add "$(cat /tmp/rust_target)" \
-  && cargo install cargo-chef --locked \
-  && rm -rf "$CARGO_HOME/registry"
+RUN apk add --no-cache musl-dev pkgconf make git perl
 
 WORKDIR /rustical
-
-FROM chef AS planner
-ARG VERSION
 RUN git clone --depth 1 --branch "${VERSION}" https://github.com/lennart-k/rustical.git .
-RUN cargo chef prepare
+RUN cargo build --release --locked
+RUN cp target/release/rustical /usr/local/bin/rustical
 
-FROM chef AS builder
-WORKDIR /rustical
-COPY --from=planner /rustical/recipe.json recipe.json
-RUN cargo chef cook --release --target "$(cat /tmp/rust_target)"
-
-ARG VERSION
-RUN git clone --depth 1 --branch "${VERSION}" https://github.com/lennart-k/rustical.git /tmp/src \
-  && cp -r /tmp/src/* . \
-  && rm -rf /tmp/src
-RUN cargo install --locked --target "$(cat /tmp/rust_target)" --path .
-
-FROM scratch
-COPY --from=builder /usr/local/cargo/bin/rustical /usr/local/bin/rustical
+FROM alpine:3.21
+RUN apk add --no-cache ca-certificates
+COPY --from=builder /usr/local/bin/rustical /usr/local/bin/rustical
 CMD ["/usr/local/bin/rustical"]
 ENV RUSTICAL_DATA_STORE__SQLITE__DB_URL=/var/lib/rustical/db.sqlite3
 EXPOSE 4000

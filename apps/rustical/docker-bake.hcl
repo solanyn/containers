@@ -6,7 +6,7 @@ variable "APP" {
 
 variable "RUSTICAL_VERSION" {
   // renovate: datasource=github-releases depName=lennart-k/rustical
-  default = "v0.5.6"
+  default = "v0.12.10"
 }
 
 variable "VERSION" {

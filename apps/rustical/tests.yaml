@@ -21,4 +21,4 @@ jobs:
 
       - name: Test container
         run: |
-          docker run --rm rustical:v0.5.6 /usr/local/bin/rustical health || true
+          docker run --rm rustical:v0.12.10 /usr/local/bin/rustical health || true

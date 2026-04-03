@@ -1,24 +1,12 @@
-name: Test rustical
+schemaVersion: 2.0.0
 
-on:
-  workflow_call:
+commandTests:
+  - name: "rustical binary exists"
+    command: "which"
+    args: ["rustical"]
+    exitCode: 0
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build image
-        uses: docker/bake-action@v5
-        with:
-          workdir: ./apps/rustical
-          targets: image-local
-
-      - name: Test container
-        run: |
-          docker run --rm rustical:v0.12.10 /usr/local/bin/rustical health || true
+  - name: "rustical responds to help"
+    command: "rustical"
+    args: ["--help"]
+    exitCode: 0

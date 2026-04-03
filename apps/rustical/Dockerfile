@@ -1,48 +1,15 @@
 ARG VERSION
 
-FROM --platform=$BUILDPLATFORM rust:1.94-alpine AS chef
-
-ARG TARGETPLATFORM
-ARG BUILDPLATFORM
+FROM rust:1.94-alpine AS builder
+RUN apk add --no-cache musl-dev git
 ARG VERSION
-
-ENV CC_aarch64_unknown_linux_musl="clang"
-ENV AR_aarch64_unknown_linux_musl="llvm21-ar"
-ENV CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_RUSTFLAGS="-Clink-self-contained=yes -Clinker=rust-lld"
-
-RUN case $TARGETPLATFORM in \
-  "linux/amd64") echo x86_64-unknown-linux-musl > /tmp/rust_target;; \
-  "linux/arm64") echo aarch64-unknown-linux-musl > /tmp/rust_target;; \
-  *) echo "Unsupported platform ${TARGETPLATFORM}"; exit 1;;  \
-  esac
-
-RUN apk add --no-cache musl-dev llvm21 clang perl pkgconf make git \
-  && rustup target add "$(cat /tmp/rust_target)" \
-  && cargo install cargo-chef --locked \
-  && rm -rf "$CARGO_HOME/registry"
-
 WORKDIR /rustical
+RUN git clone --depth 1 --branch "${VERSION}" https://github.com/lennart-k/rustical.git . \
+  && cargo build --release --locked \
+  && strip target/release/rustical
 
-FROM chef AS planner
-ARG VERSION
-RUN git clone --depth 1 --branch "${VERSION}" https://github.com/lennart-k/rustical.git .
-RUN cargo chef prepare
-
-FROM chef AS builder
-WORKDIR /rustical
-COPY --from=planner /rustical/recipe.json recipe.json
-RUN cargo chef cook --release --target "$(cat /tmp/rust_target)"
-
-ARG VERSION
-RUN git clone --depth 1 --branch "${VERSION}" https://github.com/lennart-k/rustical.git /tmp/src \
-  && cp -r /tmp/src/* . \
-  && rm -rf /tmp/src
-RUN cargo build --release --target "$(cat /tmp/rust_target)" --locked \
-  && cp "target/$(cat /tmp/rust_target)/release/rustical" /usr/local/bin/rustical
-
-FROM scratch
-COPY --from=builder /usr/local/bin/rustical /usr/local/bin/rustical
-CMD ["/usr/local/bin/rustical"]
+FROM alpine:3.21
+COPY --from=builder /rustical/target/release/rustical /usr/local/bin/rustical
 ENV RUSTICAL_DATA_STORE__SQLITE__DB_URL=/var/lib/rustical/db.sqlite3
 EXPOSE 4000
-HEALTHCHECK --interval=30s --timeout=30s --start-period=3s --retries=3 CMD ["/usr/local/bin/rustical", "health"]
+CMD ["rustical"]

@@ -1,7 +1,7 @@
 FROM debian:bookworm-slim
 
 ARG UV_VERSION=0.10.9
-ARG BUN_VERSION=1.2.5
+ARG NODE_VERSION=22.15.0
 ARG OP_VERSION=2.30.3
 ARG GH_VERSION=2.65.0
 
@@ -19,8 +19,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN curl -fsSL "https://astral.sh/uv/${UV_VERSION}/install.sh" | \
       INSTALLER_NO_MODIFY_PATH=1 UV_INSTALL_DIR=/usr/local/bin sh
 
-# bun
-RUN curl -fsSL https://bun.sh/install | BUN_INSTALL=/usr/local bash
+# node
+RUN curl -fsSL https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.gz | \
+      tar xz -C /usr/local --strip-components=1
 
 # kubectl
 RUN KUBECTL_VERSION=$(curl -sL https://dl.k8s.io/release/stable.txt) && \

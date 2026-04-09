@@ -21,24 +21,14 @@ commandTests:
     args: ["uv"]
     exitCode: 0
 
-  - name: "bun exists"
+  - name: "node exists"
     command: "which"
-    args: ["bun"]
+    args: ["node"]
     exitCode: 0
 
-  - name: "kubectl exists"
+  - name: "npm exists"
     command: "which"
-    args: ["kubectl"]
-    exitCode: 0
-
-  - name: "op exists"
-    command: "which"
-    args: ["op"]
-    exitCode: 0
-
-  - name: "gh exists"
-    command: "which"
-    args: ["gh"]
+    args: ["npm"]
     exitCode: 0
 
   - name: "python3 exists"
@@ -46,12 +36,27 @@ commandTests:
     args: ["python3"]
     exitCode: 0
 
-  - name: "unzip exists"
+  - name: "kubectl exists"
     command: "which"
-    args: ["unzip"]
+    args: ["kubectl"]
+    exitCode: 0
+
+  - name: "gh exists"
+    command: "which"
+    args: ["gh"]
+    exitCode: 0
+
+  - name: "op exists"
+    command: "which"
+    args: ["op"]
     exitCode: 0
 
   - name: "ssh exists"
     command: "which"
     args: ["ssh"]
+    exitCode: 0
+
+  - name: "unzip exists"
+    command: "which"
+    args: ["unzip"]
     exitCode: 0

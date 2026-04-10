@@ -30,7 +30,8 @@ RUN curl -sL "https://github.com/cli/cli/releases/download/v${GH_VERSION}/gh_${G
 
 # glab (GitLab CLI)
 RUN curl -sL "https://gitlab.com/gitlab-org/cli/-/releases/v${GLAB_VERSION}/downloads/glab_${GLAB_VERSION}_linux_amd64.tar.gz" | \
-      tar xz --strip-components=1 -C /usr/local
+      tar xz --strip-components=1 -C /usr/local && \
+    mv /usr/local/glab /usr/local/bin/glab
 
 # 1password-cli
 RUN curl -sS "https://cache.agilebits.com/dist/1P/op2/pkg/v${OP_VERSION}/op_linux_amd64_v${OP_VERSION}.zip" \

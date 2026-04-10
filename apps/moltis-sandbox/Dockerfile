@@ -14,6 +14,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       procps \
       unzip \
       openssh-client \
+      ffmpeg \
+      tmux \
     && rm -rf /var/lib/apt/lists/*
 
 # uv (includes python3)
@@ -44,6 +46,12 @@ RUN curl -sS "https://cache.agilebits.com/dist/1P/op2/pkg/v${OP_VERSION}/op_linu
 ENV UV_PYTHON_INSTALL_DIR=/opt/uv/python
 RUN uv python install 3.13 && \
     ln -sf $(uv python find 3.13) /usr/local/bin/python3
+
+# kubectl
+ARG KUBECTL_VERSION=1.32.4
+RUN curl -fsSL "https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl" \
+      -o /usr/local/bin/kubectl && \
+    chmod +x /usr/local/bin/kubectl
 
 # Add node user for uid 1000 compatibility
 RUN echo "node:x:1000:1000::/workspace:/bin/sh" >> /etc/passwd && \

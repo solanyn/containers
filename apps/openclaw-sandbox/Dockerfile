@@ -57,4 +57,5 @@ RUN uv python install 3.13 && \
 # When sandbox runs as --user 1000:1000, tools like op CLI
 # need a passwd entry to resolve the current user
 RUN echo "node:x:1000:1000::/workspace:/bin/sh" >> /etc/passwd && \
+    echo "node:*:20549:0:99999:7:::" >> /etc/shadow && \
     echo "node:x:1000:" >> /etc/group

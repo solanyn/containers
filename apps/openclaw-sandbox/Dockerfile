@@ -4,6 +4,9 @@ ARG UV_VERSION=0.10.9
 ARG NODE_VERSION=22.15.0
 ARG OP_VERSION=2.30.3
 ARG GH_VERSION=2.65.0
+ARG GO_VERSION=1.25.2
+ARG HELM_VERSION=3.18.2
+ARG TALOSCTL_VERSION=1.12.6
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
       git \
@@ -50,6 +53,21 @@ RUN curl -sS "https://cache.agilebits.com/dist/1P/op2/pkg/v${OP_VERSION}/op_linu
     unzip -o /tmp/op.zip -d /usr/local/bin op && \
     chmod +x /usr/local/bin/op && \
     rm /tmp/op.zip
+
+# go
+RUN curl -fsSL "https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz" | \
+      tar xz -C /usr/local && \
+    ln -sf /usr/local/go/bin/go /usr/local/bin/go && \
+    ln -sf /usr/local/go/bin/gofmt /usr/local/bin/gofmt
+
+# helm
+RUN curl -fsSL "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" | \
+      tar xz --strip-components=1 -C /usr/local/bin linux-amd64/helm
+
+# talosctl
+RUN curl -fsSL "https://github.com/siderolabs/talos/releases/download/v${TALOSCTL_VERSION}/talosctl-linux-amd64" \
+      -o /usr/local/bin/talosctl && \
+    chmod +x /usr/local/bin/talosctl
 
 # Install python3 via uv (install to world-readable path for non-root runtime)
 ENV UV_PYTHON_INSTALL_DIR=/opt/uv/python

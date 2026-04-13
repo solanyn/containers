@@ -37,6 +37,9 @@ RUN KUBECTL_VERSION=$(curl -sL https://dl.k8s.io/release/stable.txt) && \
       -o /usr/local/bin/kubectl && \
     chmod +x /usr/local/bin/kubectl
 
+# flux
+RUN curl -sL https://fluxcd.io/install.sh | FLUX_VERSION=2.5.1 bash
+
 # gh (GitHub CLI)
 RUN curl -sL "https://github.com/cli/cli/releases/download/v${GH_VERSION}/gh_${GH_VERSION}_linux_amd64.tar.gz" | \
       tar xz --strip-components=1 -C /usr/local

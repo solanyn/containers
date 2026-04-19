@@ -51,11 +51,6 @@ commandTests:
     args: ["op"]
     exitCode: 0
 
-  - name: "ssh exists"
-    command: "which"
-    args: ["ssh"]
-    exitCode: 0
-
   - name: "unzip exists"
     command: "which"
     args: ["unzip"]

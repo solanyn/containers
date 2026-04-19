@@ -15,16 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       ca-certificates \
       procps \
       unzip \
-      openssh-client \
-      openssh-server \
     && rm -rf /var/lib/apt/lists/*
-
-# sshd setup for SSH sandbox backend
-RUN mkdir -p /run/sshd && \
-    sed -i "s/#PermitRootLogin.*/PermitRootLogin no/" /etc/ssh/sshd_config && \
-    sed -i "s/#PasswordAuthentication.*/PasswordAuthentication no/" /etc/ssh/sshd_config && \
-    sed -i "s/#PubkeyAuthentication.*/PubkeyAuthentication yes/" /etc/ssh/sshd_config && \
-    echo "AuthorizedKeysFile /etc/ssh/authorized_keys/%u" >> /etc/ssh/sshd_config
 
 # uv (includes python3)
 RUN curl -fsSL "https://astral.sh/uv/${UV_VERSION}/install.sh" | \
@@ -75,8 +66,6 @@ RUN uv python install 3.13 && \
     ln -sf $(uv python find 3.13) /usr/local/bin/python3
 
 # Add node user for uid 1000 compatibility
-# When sandbox runs as --user 1000:1000, tools like op CLI
-# need a passwd entry to resolve the current user
-RUN echo "node:x:1000:1000::/workspace:/bin/sh" >> /etc/passwd && \
+RUN echo "node:x:1000:1000::/home/node/.openclaw/workspace:/bin/sh" >> /etc/passwd && \
     echo "node:*:20549:0:99999:7:::" >> /etc/shadow && \
     echo "node:x:1000:" >> /etc/group

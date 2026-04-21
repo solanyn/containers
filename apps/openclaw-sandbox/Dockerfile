@@ -7,7 +7,7 @@ ARG GH_VERSION=2.65.0
 ARG GO_VERSION=1.25.2
 ARG HELM_VERSION=3.18.2
 ARG TALOSCTL_VERSION=1.12.6
-ARG DOCKER_VERSION=29.0.5
+ARG DOCKER_VERSION=29.0.0
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
       git \

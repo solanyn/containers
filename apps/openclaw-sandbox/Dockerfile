@@ -7,6 +7,7 @@ ARG GH_VERSION=2.65.0
 ARG GO_VERSION=1.25.2
 ARG HELM_VERSION=3.18.2
 ARG TALOSCTL_VERSION=1.12.6
+ARG DOCKER_VERSION=29.0.5
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
       git \
@@ -59,6 +60,11 @@ RUN curl -fsSL "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" | 
 RUN curl -fsSL "https://github.com/siderolabs/talos/releases/download/v${TALOSCTL_VERSION}/talosctl-linux-amd64" \
       -o /usr/local/bin/talosctl && \
     chmod +x /usr/local/bin/talosctl
+
+
+# docker CLI (for DinD sidecar communication)
+RUN curl -fsSL "https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz" | \
+      tar xz --strip-components=1 -C /usr/local/bin docker/docker
 
 # Install python3 via uv (install to world-readable path for non-root runtime)
 ENV UV_PYTHON_INSTALL_DIR=/opt/uv/python

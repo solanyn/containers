@@ -15,6 +15,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       jq \
       ca-certificates \
       procps \
+      openssh-client \
+      iputils-ping \
       unzip \
     && rm -rf /var/lib/apt/lists/*
 

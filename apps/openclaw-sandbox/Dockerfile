@@ -4,6 +4,7 @@ ARG UV_VERSION=0.10.9
 ARG NODE_VERSION=22.15.0
 ARG OP_VERSION=2.30.3
 ARG GH_VERSION=2.65.0
+ARG GLAB_VERSION=1.51.0
 ARG GO_VERSION=1.25.2
 ARG HELM_VERSION=3.18.2
 ARG TALOSCTL_VERSION=1.12.6
@@ -40,6 +41,10 @@ RUN curl -sL https://fluxcd.io/install.sh | FLUX_VERSION=2.5.1 bash
 # gh (GitHub CLI)
 RUN curl -sL "https://github.com/cli/cli/releases/download/v${GH_VERSION}/gh_${GH_VERSION}_linux_amd64.tar.gz" | \
       tar xz --strip-components=1 -C /usr/local
+
+# glab (GitLab CLI)
+RUN curl -sL "https://gitlab.com/gitlab-org/cli/-/releases/v${GLAB_VERSION}/downloads/glab_${GLAB_VERSION}_linux_amd64.tar.gz" | \
+      tar xz --strip-components=1 -C /usr/local/bin bin/glab
 
 # 1password-cli
 RUN curl -sS "https://cache.agilebits.com/dist/1P/op2/pkg/v${OP_VERSION}/op_linux_amd64_v${OP_VERSION}.zip" \

@@ -1,0 +1,27 @@
+schemaVersion: 2.0.0
+
+commandTests:
+  - name: "bundled spaCy model imports"
+    command: "python"
+    args: ["-c", "import en_core_web_sm"]
+    exitCode: 0
+
+  - name: "stock en_core_web_lg is removed"
+    command: "python"
+    args: ["-c", "import en_core_web_lg"]
+    exitCode: 1
+
+  - name: "nlp conf points at the bundled model"
+    command: "grep"
+    args: ["-q", "model_name: en_core_web_sm", "/app/presidio_analyzer/conf/default.yaml"]
+    exitCode: 0
+
+fileExistenceTests:
+  - name: "presidio nlp conf exists"
+    path: "/app/presidio_analyzer/conf/default.yaml"
+    shouldExist: true
+
+metadataTest:
+  exposedPorts: ["3000"]
+  user: "1001"
+  workdir: "/app"

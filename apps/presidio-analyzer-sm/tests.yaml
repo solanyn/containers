@@ -16,12 +16,39 @@ commandTests:
     args: ["-q", "model_name: en_core_web_sm", "/app/presidio_analyzer/conf/default.yaml"]
     exitCode: 0
 
+  - name: "entrypoint uses waitress, not gunicorn"
+    command: "grep"
+    args: ["-q", "waitress-serve", "/app/entrypoint.sh"]
+    exitCode: 0
+
+  - name: "waitress is importable"
+    command: "python"
+    args: ["-c", "import waitress; print(waitress.__version__)"]
+    exitCode: 0
+
 fileExistenceTests:
   - name: "presidio nlp conf exists"
     path: "/app/presidio_analyzer/conf/default.yaml"
     shouldExist: true
 
+  - name: "entrypoint exists and is executable"
+    path: "/app/entrypoint.sh"
+    shouldExist: true
+    isExecutableBy: "1001"
+
 metadataTest:
   exposedPorts: ["3000"]
   user: "1001"
   workdir: "/app"
+  entrypoint: ["/app/entrypoint.sh"]
+
+# Regression guard: the upstream "dirty" gunicorn fork would deadlock for
+# 10+ minutes on cold start. Waitress should be serving /health within 30s.
+startupTest:
+  startupCommand: ["/app/entrypoint.sh"]
+  expectedPort: 3000
+  waitTime: 30
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: 3000
